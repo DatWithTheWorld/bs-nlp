@@ -1,0 +1,10 @@
+google-play-scraper
+pandas
+fastapi
+uvicorn
+axios
+recharts
+lucide-react
+jinja2
+python-multipart
+# AI & Analytics logic for BSI (Business Sentiment Intelligence)
