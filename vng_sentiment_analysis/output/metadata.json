@@ -1,0 +1,30 @@
+{
+  "total_reviews": 25125,
+  "train_size": 20100,
+  "test_size": 5025,
+  "num_classes": 3,
+  "class_names": [
+    "Negative",
+    "Neutral",
+    "Positive"
+  ],
+  "label_distribution": {
+    "Negative": 8736,
+    "Neutral": 1466,
+    "Positive": 14923
+  },
+  "apps": [
+    "Zalo",
+    "Zing MP3",
+    "ZaloPay",
+    "PUBG Mobile VN",
+    "Dead Target",
+    "ZingSpeed Mobile",
+    "Play Together VNG",
+    "Laban Key",
+    "Thiên Long Bát Bộ VNG",
+    "Roblox VN"
+  ],
+  "avg_text_length": 6.303960199004975,
+  "has_underthesea": true
+}

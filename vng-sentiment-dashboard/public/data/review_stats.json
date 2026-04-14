@@ -1,0 +1,97 @@
+{
+  "total_reviews": 25125,
+  "sentiment_dist": {
+    "Positive": 14923,
+    "Negative": 8736,
+    "Neutral": 1466
+  },
+  "score_dist": {
+    "1": 7647,
+    "2": 1089,
+    "3": 1466,
+    "4": 1958,
+    "5": 12965
+  },
+  "app_dist": {
+    "Play Together VNG": 2839,
+    "ZingSpeed Mobile": 2838,
+    "Laban Key": 2674,
+    "Zing MP3": 2648,
+    "Roblox VN": 2645,
+    "PUBG Mobile VN": 2585,
+    "Zalo": 2495,
+    "Dead Target": 2423,
+    "ZaloPay": 2356,
+    "Thiên Long Bát Bộ VNG": 1622
+  },
+  "app_sentiment": {
+    "Zalo": {
+      "Negative": 1359,
+      "Positive": 1047,
+      "Neutral": 89
+    },
+    "Zing MP3": {
+      "Negative": 1336,
+      "Positive": 1166,
+      "Neutral": 146
+    },
+    "ZaloPay": {
+      "Positive": 2136,
+      "Negative": 198,
+      "Neutral": 22
+    },
+    "PUBG Mobile VN": {
+      "Positive": 1404,
+      "Negative": 1042,
+      "Neutral": 139
+    },
+    "Dead Target": {
+      "Positive": 1919,
+      "Negative": 360,
+      "Neutral": 144
+    },
+    "ZingSpeed Mobile": {
+      "Negative": 1512,
+      "Positive": 1073,
+      "Neutral": 253
+    },
+    "Play Together VNG": {
+      "Positive": 1571,
+      "Negative": 1006,
+      "Neutral": 262
+    },
+    "Laban Key": {
+      "Positive": 1629,
+      "Negative": 812,
+      "Neutral": 233
+    },
+    "Thiên Long Bát Bộ VNG": {
+      "Positive": 1409,
+      "Negative": 186,
+      "Neutral": 27
+    },
+    "Roblox VN": {
+      "Positive": 1569,
+      "Negative": 925,
+      "Neutral": 151
+    }
+  },
+  "avg_text_length": 6.303960199004975,
+  "text_length_by_sentiment": {
+    "Negative": {
+      "mean": 9.251602564102564,
+      "median": 6.0,
+      "max": 75
+    },
+    "Neutral": {
+      "mean": 9.117326057298772,
+      "median": 6.0,
+      "max": 74
+    },
+    "Positive": {
+      "mean": 4.302017020706292,
+      "median": 2.0,
+      "max": 79
+    }
+  }
+}

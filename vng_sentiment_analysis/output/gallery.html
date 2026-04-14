@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNG Sentiment Analysis - Results Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f35;
+            --bg-card-hover: #222845;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --glow-blue: rgba(59, 130, 246, 0.15);
+            --glow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, var(--glow-blue) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, var(--glow-purple) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Header */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-purple), transparent);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-cyan);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge .dot {
+            width: 8px; height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            padding: 40px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-card:hover::before { opacity: 1; }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-card:nth-child(2) .stat-value { color: var(--accent-purple); }
+        .stat-card:nth-child(3) .stat-value { color: var(--accent-cyan); }
+        .stat-card:nth-child(4) .stat-value { color: var(--accent-green); }
+        .stat-card:nth-child(5) .stat-value { color: var(--accent-orange); }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Section Headers */
+        .section {
+            padding: 40px 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .section-icon.data { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+        .section-icon.ml { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+        .section-icon.dl { background: linear-gradient(135deg, #10b981, #06b6d4); }
+        .section-icon.compare { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Chart Grid */
+        .chart-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .chart-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .chart-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .chart-grid.cols-1 { grid-template-columns: 1fr; }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--glow-blue);
+        }
+
+        .chart-card-header {
+            padding: 20px 24px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chart-card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chart-tag {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-tag.ml { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+        .chart-tag.dl { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .chart-tag.data { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+        .chart-tag.all { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); }
+
+        .chart-img-wrapper {
+            padding: 0 16px 16px;
+        }
+
+        .chart-img-wrapper img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+            background: #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover .chart-img-wrapper img {
+            transform: scale(1.02);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            cursor: zoom-out;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 95vw;
+            max-height: 90vh;
+            position: relative;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: #fff;
+        }
+
+        .modal-title {
+            text-align: center;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 20px; right: 24px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            z-index: 1001;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .results-table th, .results-table td {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .results-table th {
+            background: rgba(59, 130, 246, 0.1);
+            font-weight: 600;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .results-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .results-table td:first-child { font-weight: 600; }
+
+        .best-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0 40px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .chart-grid.cols-2, .chart-grid.cols-3 { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Nav tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-tab {
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <div class="container">
+        <div class="hero">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Pipeline Complete
+            </div>
+            <h1>VNG App Reviews<br>Sentiment Analysis</h1>
+            <p>Phân tích cảm xúc 25,125 reviews từ 10 ứng dụng VNG trên Google Play Store bằng Machine Learning & Deep Learning</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-value">25,125</div>
+                <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">10</div>
+                <div class="stat-label">VNG Apps</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Models Trained</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">81.25%</div>
+                <div class="stat-label">Best Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">18</div>
+                <div class="stat-label">Charts Generated</div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="scrollToSection('data')">📊 Data</button>
+            <button class="nav-tab" onclick="scrollToSection('ml')">🤖 ML Models</button>
+            <button class="nav-tab" onclick="scrollToSection('dl')">🧠 DL Models</button>
+            <button class="nav-tab" onclick="scrollToSection('compare')">⚡ Comparison</button>
+            <button class="nav-tab" onclick="scrollToSection('results')">📈 Results</button>
+        </div>
+
+        <!-- DATA SECTION -->
+        <div class="section" id="data">
+            <div class="section-header">
+                <div class="section-icon data">📊</div>
+                <div>
+                    <div class="section-title">Data Analysis</div>
+                    <div class="section-subtitle">Phân bố dữ liệu & phân tích từ khóa</div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-2">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Data Distribution</div>
+                        <span class="chart-tag data">DATA</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/data_distribution.png" alt="Data Distribution">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Sentiment per App</div>
+                        <span class="chart-tag data">DATA</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/sentiment_by_app.png" alt="Sentiment by App">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-1" style="margin-top: 24px;">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Word Clouds by Sentiment</div>
+                        <span class="chart-tag data">DATA</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/wordclouds.png" alt="Word Clouds">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ML SECTION -->
+        <div class="section" id="ml">
+            <div class="section-header">
+                <div class="section-icon ml">🤖</div>
+                <div>
+                    <div class="section-title">Machine Learning</div>
+                    <div class="section-subtitle">Naive Bayes • Logistic Regression • SVM • Random Forest</div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-1">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Confusion Matrices (ML)</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_confusion_matrices.png" alt="ML Confusion Matrices">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-2" style="margin-top: 24px;">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Model Comparison (ML)</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_model_comparison.png" alt="ML Model Comparison">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Cross-Validation (ML, k=5)</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_cv_boxplot.png" alt="ML CV Boxplot">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-2" style="margin-top: 24px;">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Naive Bayes Report</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_report_naive_bayes.png" alt="NB Report">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Logistic Regression Report</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_report_logistic_regression.png" alt="LR Report">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">SVM Report</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_report_svm_linear.png" alt="SVM Report">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Random Forest Report</div>
+                        <span class="chart-tag ml">ML</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/ml_report_random_forest.png" alt="RF Report">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DL SECTION -->
+        <div class="section" id="dl">
+            <div class="section-header">
+                <div class="section-icon dl">🧠</div>
+                <div>
+                    <div class="section-title">Deep Learning</div>
+                    <div class="section-subtitle">Bidirectional LSTM • CNN (Conv1D)</div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-2">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">BiLSTM Training History</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_training_bilstm.png" alt="BiLSTM Training">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">CNN Training History</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_training_cnn.png" alt="CNN Training">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-1" style="margin-top: 24px;">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Confusion Matrices (DL)</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_confusion_matrices.png" alt="DL Confusion Matrices">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-2" style="margin-top: 24px;">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Model Comparison (DL)</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_model_comparison.png" alt="DL Model Comparison">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">Cross-Validation (DL, k=5)</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_cv_boxplot.png" alt="DL CV Boxplot">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">BiLSTM Classification Report</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_report_bilstm.png" alt="BiLSTM Report">
+                    </div>
+                </div>
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">CNN Classification Report</div>
+                        <span class="chart-tag dl">DL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/dl_report_cnn.png" alt="CNN Report">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARISON SECTION -->
+        <div class="section" id="compare">
+            <div class="section-header">
+                <div class="section-icon compare">⚡</div>
+                <div>
+                    <div class="section-title">All Models Comparison</div>
+                    <div class="section-subtitle">ML vs Deep Learning — side by side</div>
+                </div>
+            </div>
+
+            <div class="chart-grid cols-1">
+                <div class="chart-card" onclick="openModal(this)">
+                    <div class="chart-card-header">
+                        <div class="chart-card-title">All Models Comparison (ML vs DL)</div>
+                        <span class="chart-tag all">ALL</span>
+                    </div>
+                    <div class="chart-img-wrapper">
+                        <img src="charts/all_models_comparison.png" alt="All Models Comparison">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS TABLE -->
+        <div class="section" id="results">
+            <div class="section-header">
+                <div class="section-icon data">📈</div>
+                <div>
+                    <div class="section-title">Detailed Results</div>
+                    <div class="section-subtitle">Metrics table for all trained models</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Type</th>
+                        <th>Accuracy</th>
+                        <th>F1 Macro</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>CV Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Naive Bayes</td>
+                        <td><span class="chart-tag ml">ML</span></td>
+                        <td class="metric-value">0.8082</td>
+                        <td class="metric-value">0.5467</td>
+                        <td class="metric-value">0.5320</td>
+                        <td class="metric-value">0.5624</td>
+                        <td class="metric-value">0.8091 ± 0.0057</td>
+                    </tr>
+                    <tr>
+                        <td>Logistic Regression</td>
+                        <td><span class="chart-tag ml">ML</span></td>
+                        <td class="metric-value">0.8084</td>
+                        <td class="metric-value">0.5474</td>
+                        <td class="metric-value">0.5325</td>
+                        <td class="metric-value">0.5633</td>
+                        <td class="metric-value">0.8069 ± 0.0066</td>
+                    </tr>
+                    <tr>
+                        <td>SVM (Linear) <span class="best-badge">Best ML F1</span></td>
+                        <td><span class="chart-tag ml">ML</span></td>
+                        <td class="metric-value">0.7940</td>
+                        <td class="metric-value">0.5503</td>
+                        <td class="metric-value">0.5641</td>
+                        <td class="metric-value">0.5586</td>
+                        <td class="metric-value">0.7921 ± 0.0065</td>
+                    </tr>
+                    <tr>
+                        <td>Random Forest</td>
+                        <td><span class="chart-tag ml">ML</span></td>
+                        <td class="metric-value">0.7958</td>
+                        <td class="metric-value">0.5480</td>
+                        <td class="metric-value">0.6174</td>
+                        <td class="metric-value">0.5633</td>
+                        <td class="metric-value">0.7920 ± 0.0041</td>
+                    </tr>
+                    <tr style="background: rgba(16, 185, 129, 0.05);">
+                        <td>BiLSTM <span class="best-badge">Best Overall</span></td>
+                        <td><span class="chart-tag dl">DL</span></td>
+                        <td class="metric-value" style="color: #10b981; font-weight: 700;">0.8125</td>
+                        <td class="metric-value" style="color: #10b981; font-weight: 700;">0.5505</td>
+                        <td class="metric-value">0.5341</td>
+                        <td class="metric-value">0.5679</td>
+                        <td class="metric-value">0.8026 ± 0.0067</td>
+                    </tr>
+                    <tr>
+                        <td>CNN</td>
+                        <td><span class="chart-tag dl">DL</span></td>
+                        <td class="metric-value">0.8044</td>
+                        <td class="metric-value">0.5448</td>
+                        <td class="metric-value">0.5279</td>
+                        <td class="metric-value">0.5631</td>
+                        <td class="metric-value">0.8022 ± 0.0072</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 24px; padding: 20px; background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border);">
+                <h3 style="margin-bottom: 12px; font-size: 16px;">🔑 Feature Importance (Top Keywords)</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div>
+                        <div style="color: var(--accent-red); font-weight: 600; margin-bottom: 8px;">😡 Negative</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">tệ, rác, tiền, xóa, lỗi, gửi, dell, quảng_cáo, toàn, tệ_hại</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--accent-orange); font-weight: 600; margin-bottom: 8px;">😐 Neutral</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">khó_chịu, thường, văng, tạm đc, nhưng_mà, cải_thiện, bth, tạm, lỗi, tăng</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--accent-green); font-weight: 600; margin-bottom: 8px;">😊 Positive</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">tuyệt_vời, good, đẹp, tốt, cảm_ơn, tuyệt, tiện_lợi, tiện, vui</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>VNG App Reviews Sentiment Analysis • ML & DL Pipeline • 25,125 Reviews • 6 Models • 18 Charts</p>
+            <p style="margin-top: 8px; font-size: 12px;">Generated by AI-DS Projects VKU</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal()">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modal-img" src="" alt="">
+            <div class="modal-title" id="modal-title"></div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(card) {
+            const img = card.querySelector('img');
+            const title = card.querySelector('.chart-card-title').textContent;
+            document.getElementById('modal-img').src = img.src;
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Active nav on scroll
+        const sections = ['data', 'ml', 'dl', 'compare', 'results'];
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY + 200;
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= scrollY && el.offsetTop + el.offsetHeight > scrollY) {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    const btn = document.querySelector(`.nav-tab[onclick*="${id}"]`);
+                    if (btn) btn.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

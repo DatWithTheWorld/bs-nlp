@@ -1,0 +1,122 @@
+{
+  "BiLSTM": {
+    "model_name": "BiLSTM",
+    "metrics": {
+      "accuracy": 0.8125373134328359,
+      "precision_macro": 0.5340633399162489,
+      "recall_macro": 0.567920758789815,
+      "f1_macro": 0.5504656827234361,
+      "f1_weighted": 0.7882699406800341
+    },
+    "confusion_matrix": [
+      [
+        1415,
+        0,
+        332
+      ],
+      [
+        139,
+        0,
+        154
+      ],
+      [
+        317,
+        0,
+        2668
+      ]
+    ],
+    "classification_report": {
+      "Negative": {
+        "precision": 0.7562800641368252,
+        "recall": 0.8099599313108186,
+        "f1-score": 0.7822001105583195,
+        "support": 1747.0
+      },
+      "Neutral": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 293.0
+      },
+      "Positive": {
+        "precision": 0.8459099556119214,
+        "recall": 0.8938023450586264,
+        "f1-score": 0.8691969376119889,
+        "support": 2985.0
+      },
+      "accuracy": 0.8125373134328359,
+      "macro avg": {
+        "precision": 0.5340633399162489,
+        "recall": 0.567920758789815,
+        "f1-score": 0.5504656827234361,
+        "support": 5025.0
+      },
+      "weighted avg": {
+        "precision": 0.7654253710544515,
+        "recall": 0.8125373134328359,
+        "f1-score": 0.7882699406800341,
+        "support": 5025.0
+      }
+    }
+  },
+  "CNN": {
+    "model_name": "CNN",
+    "metrics": {
+      "accuracy": 0.8043781094527364,
+      "precision_macro": 0.5278562604522955,
+      "recall_macro": 0.5631049095250469,
+      "f1_macro": 0.5448375822399142,
+      "f1_weighted": 0.7806995184069254
+    },
+    "confusion_matrix": [
+      [
+        1412,
+        0,
+        335
+      ],
+      [
+        143,
+        0,
+        150
+      ],
+      [
+        355,
+        0,
+        2630
+      ]
+    ],
+    "classification_report": {
+      "Negative": {
+        "precision": 0.7392670157068063,
+        "recall": 0.8082427017744706,
+        "f1-score": 0.7722176647525294,
+        "support": 1747.0
+      },
+      "Neutral": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 293.0
+      },
+      "Positive": {
+        "precision": 0.8443017656500803,
+        "recall": 0.88107202680067,
+        "f1-score": 0.8622950819672132,
+        "support": 2985.0
+      },
+      "accuracy": 0.8043781094527364,
+      "macro avg": {
+        "precision": 0.5278562604522955,
+        "recall": 0.5631049095250469,
+        "f1-score": 0.5448375822399142,
+        "support": 5025.0
+      },
+      "weighted avg": {
+        "precision": 0.7585552730159763,
+        "recall": 0.8043781094527364,
+        "f1-score": 0.7806995184069254,
+        "support": 5025.0
+      }
+    }
+  }
+}

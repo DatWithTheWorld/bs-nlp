@@ -1,0 +1,118 @@
+{
+  "scrape_date": "2026-04-11T08:54:10.105808",
+  "total_reviews": 18000,
+  "total_apps_scraped": 10,
+  "failed_apps": [],
+  "app_details": {
+    "Zalo": {
+      "package_id": "com.zing.zalo",
+      "app_info": {
+        "title": "Zalo",
+        "score": 2.3270144,
+        "ratings": 2531316,
+        "reviews_count": 791705,
+        "installs": "100.000.000+",
+        "developer": "Zalo Group",
+        "genre": "Liên lạc"
+      },
+      "reviews_scraped": 3000
+    },
+    "Zing MP3": {
+      "package_id": "com.zing.mp3",
+      "app_info": {
+        "title": "Zing MP3",
+        "score": 3.8584356,
+        "ratings": 1211311,
+        "reviews_count": 387991,
+        "installs": "100.000.000+",
+        "developer": "Zalo Group",
+        "genre": "Nhạc và Âm thanh"
+      },
+      "reviews_scraped": 3000
+    },
+    "ZaloPay": {
+      "package_id": "vn.com.vng.zalopay",
+      "app_info": {
+        "title": "Zalopay - Quét Mọi QR",
+        "score": 4.8659973,
+        "ratings": 332496,
+        "reviews_count": 117578,
+        "installs": "10.000.000+",
+        "developer": "ZION JOINT STOCK COMPANY",
+        "genre": "Tài chính"
+      },
+      "reviews_scraped": 3000
+    },
+    "Báo Mới": {
+      "package_id": "vn.com.baomoi",
+      "app_info": {},
+      "reviews_scraped": 0
+    },
+    "PUBG Mobile VN": {
+      "package_id": "com.vng.pubgmobile",
+      "app_info": {
+        "title": "PUBG Mobile VN",
+        "score": 3.7745147,
+        "ratings": 1152920,
+        "reviews_count": 562049,
+        "installs": "10.000.000+",
+        "developer": "VNG GROUP JSC",
+        "genre": "Hành động"
+      },
+      "reviews_scraped": 3000
+    },
+    "Play Together VN": {
+      "package_id": "com.haegin.playtogether.vng",
+      "app_info": {},
+      "reviews_scraped": 0
+    },
+    "Dead Target": {
+      "package_id": "com.vng.g6.a.zombie",
+      "app_info": {
+        "title": "Dead Target: Game Zombie",
+        "score": 4.3270993,
+        "ratings": 2373129,
+        "reviews_count": 26992,
+        "installs": "100.000.000+",
+        "developer": "VNGGames Studios",
+        "genre": "Hành động"
+      },
+      "reviews_scraped": 3000
+    },
+    "ZingSpeed Mobile": {
+      "package_id": "com.vng.speedvn",
+      "app_info": {
+        "title": "ZingSpeed Mobile",
+        "score": 3.153679,
+        "ratings": 473749,
+        "reviews_count": 256952,
+        "installs": "10.000.000+",
+        "developer": "VNG GROUP JSC",
+        "genre": "Đua xe"
+      },
+      "reviews_scraped": 3000
+    },
+    "Thiên Long Bát Bộ 2 VNG": {
+      "package_id": "com.vng.tlbb2",
+      "app_info": {},
+      "reviews_scraped": 0
+    },
+    "Võ Lâm Truyền Kỳ Mobile": {
+      "package_id": "com.vng.vltk.mobile",
+      "app_info": {},
+      "reviews_scraped": 0
+    }
+  },
+  "reviews_per_app": {
+    "Zalo": 3000,
+    "Zing MP3": 3000,
+    "ZaloPay": 3000,
+    "Báo Mới": 0,
+    "PUBG Mobile VN": 3000,
+    "Play Together VN": 0,
+    "Dead Target": 3000,
+    "ZingSpeed Mobile": 3000,
+    "Thiên Long Bát Bộ 2 VNG": 0,
+    "Võ Lâm Truyền Kỳ Mobile": 0
+  }
+}
