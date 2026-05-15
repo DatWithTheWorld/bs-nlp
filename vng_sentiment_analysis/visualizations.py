@@ -121,6 +121,55 @@ def plot_sentiment_by_app(df, output_dir):
     print("   Saved: sentiment_by_app.png")
 
 
+def plot_aspect_analysis(df, output_dir):
+    """Plot aspect distribution and sentiment per aspect."""
+    if 'aspect' not in df.columns:
+        return
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    fig, axes = plt.subplots(1, 2, figsize=(18, 7))
+    fig.suptitle('Aspect-Based Sentiment Analysis', fontsize=18, fontweight='bold', y=1.02)
+
+    # 1. Aspect Distribution
+    ax = axes[0]
+    aspect_counts = df['aspect'].value_counts()
+    bars = ax.bar(aspect_counts.index, aspect_counts.values, color=MODEL_COLORS[:len(aspect_counts)],
+                   edgecolor='white', linewidth=1.5)
+    for bar, count in zip(bars, aspect_counts.values):
+        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 5,
+                f'{count:,}\n({count/len(df)*100:.1f}%)',
+                ha='center', va='bottom', fontweight='bold', fontsize=10)
+    ax.set_title('Distribution of Review Aspects', fontsize=14, fontweight='bold')
+    ax.set_ylabel('Count')
+    ax.tick_params(axis='x', rotation=30)
+
+    # 2. Sentiment per Aspect (Stacked Bar)
+    ax = axes[1]
+    aspect_sentiment = pd.crosstab(df['aspect'], df['sentiment_name'])
+    # Normalize to 100%
+    aspect_sentiment_pct = aspect_sentiment.div(aspect_sentiment.sum(1), axis=0) * 100
+    
+    # Reorder columns to Negative, Neutral, Positive if they exist
+    cols = [c for c in CLASS_NAMES if c in aspect_sentiment_pct.columns]
+    aspect_sentiment_pct = aspect_sentiment_pct[cols]
+
+    aspect_sentiment_pct.plot(kind='bar', stacked=True, ax=ax, color=[COLORS[c] for c in cols],
+                              edgecolor='white', linewidth=0.5)
+    
+    ax.set_title('Sentiment Distribution per Aspect (%)', fontsize=14, fontweight='bold')
+    ax.set_ylabel('Percentage (%)')
+    ax.set_xlabel('Aspect')
+    ax.legend(title='Sentiment', bbox_to_anchor=(1.05, 1), loc='upper left')
+    ax.set_ylim(0, 115)
+    ax.tick_params(axis='x', rotation=30)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, 'aspect_analysis.png'), dpi=150, bbox_inches='tight')
+    plt.close()
+    print("   Saved: aspect_analysis.png")
+
+
 def plot_confusion_matrices(results, output_dir, prefix='ml'):
     """Plot confusion matrices for all models."""
     os.makedirs(output_dir, exist_ok=True)
@@ -428,6 +477,8 @@ def generate_all_visualizations(output_dir):
         plot_sentiment_by_app(df, charts_dir)
         print("\n[2] Word Clouds...")
         plot_wordcloud_per_sentiment(df, charts_dir)
+        print("\n[2.5] Aspect Analysis Charts...")
+        plot_aspect_analysis(df, charts_dir)
     else:
         print("   No processed_reviews.csv found, skipping data charts.")
         df = None

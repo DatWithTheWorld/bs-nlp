@@ -13,6 +13,13 @@
     "Neutral": 1466,
     "Positive": 14923
   },
+  "aspect_distribution": {
+    "Khác": 16381,
+    "Lỗi/Sự cố": 6098,
+    "Hiệu năng": 1181,
+    "Tính năng": 814,
+    "Giao diện": 651
+  },
   "apps": [
     "Zalo",
     "Zing MP3",

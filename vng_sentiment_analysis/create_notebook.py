@@ -69,7 +69,7 @@ ml_results, ml_cv, ml_models_dict, vectorizer, ml_features = train_and_evaluate_
 
 # Bước 3: Huấn luyện K-Fold Pipeline Deep Learning (BiLSTM)
 print("BƯỚC 3: DEEP LEARNING")
-dl_results, dl_cv_results, dl_histories = train_and_evaluate_dl_all(X_train, X_test, y_train, y_test, OUTPUT_DIR)
+dl_results, dl_histories, dl_cv_results = train_and_evaluate_dl(X_train, X_test, y_train, y_test, OUTPUT_DIR)
 
 # Bước 4: Vẽ Đồ Thị (Hiển thị trực tiếp trên Notebook)
 print("BƯỚC 4: RENDER BÁO CÁO")

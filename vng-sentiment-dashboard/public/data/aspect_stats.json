@@ -1,0 +1,158 @@
+{
+  "aspect_sentiment": {
+    "Account & Security": {
+      "Negative": 3103,
+      "Neutral": 318,
+      "Positive": 1493
+    },
+    "App Updates": {
+      "Negative": 1368,
+      "Neutral": 189,
+      "Positive": 1286
+    },
+    "Connectivity & Stability": {
+      "Negative": 524,
+      "Neutral": 81,
+      "Positive": 1773
+    },
+    "General Satisfaction": {
+      "Negative": 581,
+      "Neutral": 107,
+      "Positive": 2336
+    },
+    "Graphics & Quality": {
+      "Negative": 147,
+      "Neutral": 43,
+      "Positive": 2392
+    },
+    "Monetization & Content": {
+      "Negative": 737,
+      "Neutral": 163,
+      "Positive": 1692
+    },
+    "Performance & Ads": {
+      "Negative": 1230,
+      "Neutral": 296,
+      "Positive": 2368
+    },
+    "UI/UX & Input": {
+      "Negative": 1046,
+      "Neutral": 269,
+      "Positive": 1583
+    }
+  },
+  "aspect_keywords": {
+    "General Satisfaction": [
+      "choi",
+      "quá",
+      "cc",
+      "thú_vị",
+      "rat",
+      "tạm",
+      "trò_chơi",
+      "game",
+      "chơi",
+      "tệ",
+      "lắm",
+      "vui"
+    ],
+    "Performance & Ads": [
+      "nhất",
+      "hơn",
+      "dung_lượng",
+      "nghe",
+      "quảng_cáo",
+      "chơi",
+      "hơi",
+      "nhạc",
+      "nhiều",
+      "game",
+      "lag",
+      "quá"
+    ],
+    "Connectivity & Stability": [
+      "lác",
+      "tiện",
+      "10",
+      "lỗi",
+      "đc",
+      "quá",
+      "chán",
+      "dc",
+      "ko",
+      "chơi",
+      "tuyệt_vời",
+      "game"
+    ],
+    "UI/UX & Input": [
+      "máy",
+      "ngang",
+      "sử_dụng",
+      "phím",
+      "người",
+      "điểm",
+      "hơi",
+      "trải_nghiệm",
+      "lỗi",
+      "dùng",
+      "bàn_phím",
+      "khá"
+    ],
+    "App Updates": [
+      "nghe",
+      "vl",
+      "cập_nhật",
+      "app",
+      "bài",
+      "đc",
+      "game",
+      "ko",
+      "vô",
+      "lâu",
+      "tải",
+      "good"
+    ],
+    "Graphics & Quality": [
+      "phết",
+      "tiếng",
+      "vcl",
+      "dùng",
+      "nice",
+      "ứng_dụng",
+      "họa",
+      "đồ",
+      "tot",
+      "thích",
+      "đẹp",
+      "tốt"
+    ],
+    "Account & Security": [
+      "toàn",
+      "đc",
+      "mất",
+      "ngon",
+      "lỗi",
+      "cứ",
+      "đăng_nhập",
+      "hack",
+      "chơi",
+      "ko",
+      "ổn",
+      "game"
+    ],
+    "Monetization & Content": [
+      "chê",
+      "tiện_lợi",
+      "ko",
+      "quá",
+      "rác",
+      "gem",
+      "mua",
+      "súng",
+      "game",
+      "tiền",
+      "đc",
+      "tuyệt"
+    ]
+  }
+}

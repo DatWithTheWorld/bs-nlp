@@ -61,7 +61,7 @@
         "support": 5025.0
       }
     },
-    "train_time": 0.008992671966552734,
+    "train_time": 0.012882232666015625,
     "cv_results": {
       "test_accuracy": [
         0.7695099818511797,
@@ -102,7 +102,7 @@
       "std_test_accuracy": 0.004321036588097613,
       "mean_test_f1": 0.7683367031171178,
       "std_test_f1": 0.004240939634000397,
-      "time_seconds": 7.621110916137695
+      "time_seconds": 4.44562029838562
     }
   },
   "Logistic Regression": {
@@ -167,7 +167,7 @@
         "support": 5025.0
       }
     },
-    "train_time": 1.1223950386047363,
+    "train_time": 2.8003146648406982,
     "cv_results": {
       "test_accuracy": [
         0.7855647075247801,
@@ -208,7 +208,7 @@
       "std_test_accuracy": 0.003410893266415396,
       "mean_test_f1": 0.7821880556361721,
       "std_test_f1": 0.0034843298394448925,
-      "time_seconds": 5.842132806777954
+      "time_seconds": 11.206350088119507
     }
   },
   "SVM (Linear)": {
@@ -273,7 +273,7 @@
         "support": 5025.0
       }
     },
-    "train_time": 2.4326303005218506,
+    "train_time": 6.560793399810791,
     "cv_results": {
       "test_accuracy": [
         0.8123691190841826,
@@ -314,7 +314,7 @@
       "std_test_accuracy": 0.0034516262348320338,
       "mean_test_f1": 0.8089323000032633,
       "std_test_f1": 0.003659008049494851,
-      "time_seconds": 6.3333165645599365
+      "time_seconds": 15.63716435432434
     }
   },
   "Random Forest": {
@@ -327,7 +327,7 @@
       "precision_weighted": 0.7740691671156734,
       "recall_weighted": 0.771542288557214,
       "f1_weighted": 0.770267278612014,
-      "roc_auc": 0.8111688500903332
+      "roc_auc": 0.8111686446314006
     },
     "confusion_matrix": [
       [
@@ -379,7 +379,7 @@
         "support": 5025.0
       }
     },
-    "train_time": 16.838227033615112,
+    "train_time": 28.904351949691772,
     "cv_results": {
       "test_accuracy": [
         0.8672343989948346,
@@ -420,7 +420,7 @@
       "std_test_accuracy": 0.0028790622929615204,
       "mean_test_f1": 0.8619845812987224,
       "std_test_f1": 0.0029434499176990213,
-      "time_seconds": 67.16263508796692
+      "time_seconds": 71.15296149253845
     }
   }
 }

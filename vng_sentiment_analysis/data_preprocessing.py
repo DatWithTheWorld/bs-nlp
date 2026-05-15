@@ -105,6 +105,41 @@ def get_sentiment_name(label):
     return mapping.get(label, 'Unknown')
 
 
+def get_aspect(text):
+    """Categorize review into aspects based on keywords."""
+    text = text.lower()
+    
+    # Bug / Error / Stability
+    if any(word in text for word in ['lỗi', 'lag', 'văng', 'crash', 'không vào được', 'đơ', 'hư', 'out', 'văng', 'kẹt', 'mất kết nối']):
+        return "Errors/Issues"
+    
+    # Performance / Speed
+    if any(word in text for word in ['nhanh', 'chậm', 'mượt', 'tốc độ', 'load', 'tải', 'pin', 'nóng', 'giật', 'lâu', 'delay']):
+        return "Performance"
+
+    # Interface / UI / Graphics
+    if any(word in text for word in ['giao diện', 'đẹp', 'xấu', 'dễ nhìn', 'màu', 'layout', 'chữ', 'font', 'hình ảnh', 'đồ họa', 'nhìn', 'mắt', 'thẩm mỹ']):
+        return "UI/UX"
+    
+    # Features / Functionality / Content
+    if any(word in text for word in ['tính năng', 'chức năng', 'gọi', 'nhắn tin', 'nhạc', 'gameplay', 'vũ khí', 'nhân vật', 'nhiệm vụ', 'bản đồ', 'map', 'âm thanh']):
+        return "Features"
+
+    # Account / Security / Access
+    if any(word in text for word in ['tài khoản', 'nick', 'đăng nhập', 'mật khẩu', 'acc', 'mất', 'khóa', 'ban', 'mã', 'otp', 'đăng ký']):
+        return "Account/Security"
+        
+    # Ads / Price / Support
+    if any(word in text for word in ['quảng cáo', 'qc', 'nạp', 'tiền', 'kim cương', 'vàng', 'giá', 'mua', 'đắt', 'rẻ', 'hỗ trợ', 'admin', 'chăm sóc']):
+        return "Monetization/Support"
+
+    # General Praise / Content (Very common in 'Other')
+    if any(word in text for word in ['hay', 'tốt', 'tuyệt', 'ok', 'oke', 'yêu', 'thích', 'vui', 'hài lòng', 'giải trí', 'ngon']):
+        return "General/Experience"
+        
+    return "Others"
+
+
 def load_and_preprocess(data_dir, output_dir):
     """Main preprocessing pipeline."""
     os.makedirs(output_dir, exist_ok=True)
@@ -150,6 +185,10 @@ def load_and_preprocess(data_dir, output_dir):
     print("\n[3/6] Creating sentiment labels...")
     df['sentiment'] = df['score'].apply(create_sentiment_label)
     df['sentiment_name'] = df['sentiment'].apply(get_sentiment_name)
+    
+    # Step 3.5: Extract Aspects (Khía cạnh)
+    print("\n[3.5/6] Extracting aspects...")
+    df['aspect'] = df['content'].apply(get_aspect)
 
     label_counts = df['sentiment_name'].value_counts()
     print(f"   Label distribution:")
@@ -171,8 +210,8 @@ def load_and_preprocess(data_dir, output_dir):
 
     # Step 5: Train/Test split
     print("\n[5/6] Splitting data (80/20)...")
-    X = df['processed_text'].values
-    y = df['sentiment'].values
+    X = df['processed_text'].to_numpy() # FIXED for Python 3.13 compatibility
+    y = df['sentiment'].to_numpy().astype(int)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
@@ -194,6 +233,7 @@ def load_and_preprocess(data_dir, output_dir):
              y_train=y_train, y_test=y_test)
 
     # Save metadata
+    aspect_counts = df['aspect'].value_counts().to_dict()
     metadata = {
         'total_reviews': len(df),
         'train_size': len(X_train),
@@ -205,6 +245,7 @@ def load_and_preprocess(data_dir, output_dir):
             'Neutral': int((y == 1).sum()),
             'Positive': int((y == 2).sum()),
         },
+        'aspect_distribution': aspect_counts,
         'apps': df['app_name'].unique().tolist() if 'app_name' in df.columns else [],
         'avg_text_length': float(df['text_length'].mean()),
         'has_underthesea': HAS_UNDERTHESEA,
@@ -218,6 +259,7 @@ def load_and_preprocess(data_dir, output_dir):
     print("\nDone!")
 
     return df, X_train, X_test, y_train, y_test, metadata
+
 
 
 if __name__ == "__main__":

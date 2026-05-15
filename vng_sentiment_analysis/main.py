@@ -108,7 +108,35 @@ def main():
         print(f"\n  Charts generated: {len(charts)} files")
         print(f"  Charts directory: {charts_dir}")
 
+    # ========================================
+    # Phase 5: Sync to Dashboard
+    # ========================================
+    print("\n\n" + "#" * 70)
+    print("# PHASE 5: SYNC TO DASHBOARD")
+    print("#" * 70)
+    
+    import shutil
+    DASHBOARD_DATA = os.path.join(os.path.dirname(BASE_DIR), 'vng-sentiment-dashboard', 'public', 'data')
+    DASHBOARD_CHARTS = os.path.join(os.path.dirname(BASE_DIR), 'vng-sentiment-dashboard', 'public', 'charts')
+    
+    os.makedirs(DASHBOARD_DATA, exist_ok=True)
+    os.makedirs(DASHBOARD_CHARTS, exist_ok=True)
+    
+    # Copy JSON files
+    for f in os.listdir(OUTPUT_DIR):
+        if f.endswith('.json'):
+            shutil.copy2(os.path.join(OUTPUT_DIR, f), os.path.join(DASHBOARD_DATA, f))
+            print(f"   Synced: {f}")
+            
+    # Copy charts
+    if os.path.exists(charts_dir):
+        for f in os.listdir(charts_dir):
+            if f.endswith('.png'):
+                shutil.copy2(os.path.join(charts_dir, f), os.path.join(DASHBOARD_CHARTS, f))
+        print(f"   Synced: {len(os.listdir(charts_dir))} charts")
+
     print(f"\n  All output saved in: {OUTPUT_DIR}")
+    print("  Data synced to Dashboard.")
     print("\nDone!")
 
 

@@ -176,14 +176,14 @@ def train_and_evaluate_all(X_train, X_test, y_train, y_test, output_dir):
         pickle.dump(vectorizer, f)
 
     # Step 1.5: SMOTE Balancing
-    print("\n   [SMOTE] Cân bằng dữ liệu tự động...")
+    print("\n   [SMOTE] Auto-balancing data...")
     try:
         from imblearn.over_sampling import SMOTE
         smote = SMOTE(random_state=42)
         X_train_resampled, y_train_resampled = smote.fit_resample(X_train_tfidf, y_train)
-        print("   Đã áp dụng SMOTE thành công!")
+        print("   SMOTE applied successfully!")
     except ImportError:
-        print("   [WARNING] Chưa cài đặt `imbalanced-learn`. Bỏ qua SMOTE, sử dụng raw features.")
+        print("   [WARNING] imbalanced-learn not installed. Skipping SMOTE.")
         X_train_resampled, y_train_resampled = X_train_tfidf, y_train
 
     # Step 2: Cross-Validation
@@ -233,7 +233,10 @@ def train_and_evaluate_all(X_train, X_test, y_train, y_test, output_dir):
                 top_indices = lr_model.coef_[i].argsort()[-20:][::-1]
                 top_words = [(feature_names[j], float(lr_model.coef_[i][j])) for j in top_indices]
                 feature_importance[class_name] = top_words
-                print(f"   {class_name}: {', '.join([w for w, _ in top_words[:10]])}")
+                try:
+                    print(f"   {class_name}: {', '.join([w for w, _ in top_words[:10]])}")
+                except UnicodeEncodeError:
+                    print(f"   {class_name}: [Words found, but cannot display in this terminal]")
 
     # Step 5: Save results
     print("\n[Saving Results]...")

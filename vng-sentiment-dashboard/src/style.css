@@ -654,4 +654,235 @@ body {
   margin: 60px auto;
 }
 
+/* ========== ASPECT ANALYSIS ========== */
+.aspect-keywords-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.aspect-kw-group {
+  background: var(--bg-3);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.aspect-kw-group:hover {
+  border-color: var(--blue-light);
+  background: var(--bg-4);
+}
+
+.aspect-kw-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aspect-kw-group .feature-word {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--text-1);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.aspect-kw-group:hover .feature-word {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* ========== ASPECT ANALYSIS PREMIUM UI ========== */
+.aspect-overview-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  min-height: 300px;
+}
+
+.aspect-chart-wrapper {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  flex-shrink: 0;
+}
+
+.chart-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.chart-center-text .center-value {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-0);
+  line-height: 1;
+}
+
+.chart-center-text .center-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.aspect-stats-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aspect-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aspect-stat-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.aspect-stat-info .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.aspect-stat-info .label {
+  color: var(--text-1);
+  font-weight: 500;
+  flex: 1;
+}
+
+.aspect-stat-info .value {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.aspect-stat-info .pct {
+  color: var(--text-0);
+  font-weight: 700;
+  min-width: 45px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.aspect-stat-bar {
+  height: 4px;
+  background: var(--bg-4);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.aspect-stat-bar .bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== BUSINESS INSIGHTS ========== */
+.insight-summary-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.insight-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.insight-card:hover {
+  transform: translateX(4px);
+  border-color: var(--border-hover);
+  background: var(--bg-3);
+}
+
+.insight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.insight-category {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.insight-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-0);
+  margin-bottom: 8px;
+}
+
+.insight-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.tag-impact-high { background: rgba(239, 68, 68, 0.15); color: var(--red-light); }
+.tag-impact-critical { background: var(--red); color: white; }
+.tag-impact-medium { background: rgba(245, 158, 11, 0.15); color: var(--orange-light); }
+
+.recommendations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rec-item {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-2);
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  align-items: flex-start;
+  transition: var(--transition);
+}
+
+.rec-item:hover {
+  border-color: var(--green);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.rec-icon {
+  font-size: 18px;
+}
+
+.rec-text {
+  font-size: 14px;
+  color: var(--text-1);
+  line-height: 1.5;
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }

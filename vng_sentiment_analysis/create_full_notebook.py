@@ -5,8 +5,11 @@ import nbformat as nbf
 def clean_py_code(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         code = f.read()
-    # Remove imports at the top since we will consolidate them
-    code = re.sub(r'^(import|from\s+[\w\.]+\s+import).*$', '', code, flags=re.MULTILINE)
+    
+    # NOTE: We no longer remove imports here to prevent IndentationErrors 
+    # in local try/except blocks or multi-line imports.
+    # Duplicate imports at the top are harmless in Python.
+    
     # Remove empty lines left by imports
     code = re.sub(r'\n{3,}', '\n\n', code)
     # Remove __main__ block
@@ -149,17 +152,48 @@ plot_confusion_matrices(ml_results, OUTPUT_DIR, prefix='ml')
 print("--- [BƯỚC 4]: TRAINING DEEP LEARNING ---")
 # Hàm train_and_evaluate_dl_all sẽ padding Sequences, compile Model keras và run EarlyStopping
 # (Lấy trọn vẹn từ dl_models.py)
-dl_results, dl_cv_results, dl_histories = train_and_evaluate_dl_all(X_train, X_test, y_train, y_test, OUTPUT_DIR)
+dl_results, dl_histories, dl_cv_results = train_and_evaluate_dl(X_train, X_test, y_train, y_test, OUTPUT_DIR)
 
 # Biểu đồ Lịch sử Training DL
 plot_dl_training_history(dl_histories, OUTPUT_DIR)
+
+# 5. ĐỒNG BỘ DỮ LIỆU SANG DASHBOARD
+print("\\n--- [BƯỚC 5]: ĐỒNG BỘ DỮ LIỆU SANG DASHBOARD ---")
+import shutil
+DASHBOARD_DATA = os.path.join(os.path.dirname(os.getcwd()), 'vng-sentiment-dashboard', 'public', 'data')
+DASHBOARD_CHARTS = os.path.join(os.path.dirname(os.getcwd()), 'vng-sentiment-dashboard', 'public', 'charts')
+
+os.makedirs(DASHBOARD_DATA, exist_ok=True)
+os.makedirs(DASHBOARD_CHARTS, exist_ok=True)
+
+# Copy JSON files
+for f in os.listdir(OUTPUT_DIR):
+    if f.endswith('.json'):
+        shutil.copy2(os.path.join(OUTPUT_DIR, f), os.path.join(DASHBOARD_DATA, f))
+        print(f"Synced: {f}")
+        
+# Copy charts
+charts_dir = os.path.join(OUTPUT_DIR, 'charts')
+if os.path.exists(charts_dir):
+    for f in os.listdir(charts_dir):
+        if f.endswith('.png'):
+            shutil.copy2(os.path.join(charts_dir, f), os.path.join(DASHBOARD_CHARTS, f))
+    print(f"Synced charts to Dashboard.")
+
+# 6. HIỂN THỊ KẾT QUẢ PHÂN TÍCH (DASHBOARD TRONG NOTEBOOK)
+from IPython.display import Image, display
+print("\\n--- [BƯỚC 6]: KẾT QUẢ PHÂN TÍCH KHÍA CẠNH & CẢM XÚC ---")
+# Hiển thị các biểu đồ quan trọng nhất
+display(Image(filename=os.path.join(charts_dir, 'aspect_analysis.png')))
+display(Image(filename=os.path.join(charts_dir, 'data_distribution.png')))
+display(Image(filename=os.path.join(charts_dir, 'all_models_comparison.png')))
 """))
 
     nb['cells'] = cells
     out_file = os.path.join(base_dir, 'vng_sentiment_analysis_full_pipeline.ipynb')
     with open(out_file, 'w', encoding='utf-8') as f:
         nbf.write(nb, f)
-    print(f"Bơm code thành công vào file IPYNB!")
+    print("Successfully generated IPYNB file!")
 
 if __name__ == "__main__":
     create_notebook()

@@ -1,0 +1,41 @@
+{
+  "insights": [
+    {
+      "title": "Stability is a Major Pain Point",
+      "description": "Over 52% of reviews regarding 'Errors/Issues' are negative. Users frequently complain about crashes and bugs.",
+      "impact": "High",
+      "category": "Technical"
+    },
+    {
+      "title": "User Experience is a Key Strength",
+      "description": "79% of users are satisfied with the UI/UX design. This is a consistent positive driver across the ecosystem.",
+      "impact": "Medium",
+      "category": "Design"
+    },
+    {
+      "title": "ZaloPay Leads in Satisfaction",
+      "description": "ZaloPay has the highest ratio of positive feedback. Its user experience model should be analyzed for cross-app learnings.",
+      "impact": "High",
+      "category": "Product"
+    },
+    {
+      "title": "Sentiment Warning for ZingSpeed Mobile",
+      "description": "ZingSpeed Mobile shows the lowest satisfaction level. Immediate attention to its recent updates and technical performance is required.",
+      "impact": "Critical",
+      "category": "Retention"
+    },
+    {
+      "title": "Feature Requests & Monetization",
+      "description": "Common words in feature discussions include: nhạc, nghe, tiền, ko, nhiều. Users are talking about monetization ('tiền', 'nạp') and core functionality.",
+      "impact": "Medium",
+      "category": "Monetization"
+    }
+  ],
+  "recommendations": [
+    "Prioritize bug fixing and stability updates for apps with high error counts.",
+    "Maintain the current design language and leverage UI/UX excellence in marketing.",
+    "Conduct a deep dive into ZingSpeed Mobile's negative reviews to identify specific version regressions.",
+    "Review the monetization balance (IAP) as users are increasingly vocal about payment issues."
+  ],
+  "summary": "The VNG ecosystem enjoys strong UI/UX praise but faces significant technical challenges in stability and performance, especially in gaming and utility apps."
+}

@@ -114,7 +114,7 @@ def build_cnn_model(vocab_size, max_len, num_classes=3, embedding_dim=128):
 
 
 def train_dl_model(model, X_train, y_train, X_val, y_val, model_name,
-                   epochs=20, batch_size=64):
+                   epochs=20, batch_size=64, class_weight=None):
     """Train a DL model and return history."""
     from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
@@ -133,6 +133,7 @@ def train_dl_model(model, X_train, y_train, X_val, y_val, model_name,
         batch_size=batch_size,
         callbacks=callbacks,
         verbose=1,
+        class_weight=class_weight
     )
 
     return history
@@ -260,6 +261,16 @@ def train_and_evaluate_dl(X_train, X_test, y_train, y_test, output_dir,
     )
 
     # Step 3: Train models
+    from sklearn.utils import class_weight as cw
+    weights = cw.compute_class_weight('balanced', classes=np.unique(y_tr), y=y_tr)
+    class_weight_dict = dict(enumerate(weights))
+    
+    # HEURISTIC: Boost Neutral class (1) even more because it's very hard to learn
+    if 1 in class_weight_dict:
+        class_weight_dict[1] = class_weight_dict[1] * 2.5
+        
+    print(f"   Using Class Weights (Neutral Boosted): {class_weight_dict}")
+
     dl_models = {
         'BiLSTM': (build_lstm_model, {}),
         'CNN': (build_cnn_model, {}),
@@ -280,7 +291,8 @@ def train_and_evaluate_dl(X_train, X_test, y_train, y_test, output_dir,
 
         # Train
         history = train_dl_model(model, X_tr, y_tr, X_val, y_val,
-                                 name, epochs=epochs, batch_size=batch_size)
+                                 name, epochs=epochs, batch_size=batch_size,
+                                 class_weight=class_weight_dict)
 
         # Evaluate on test set
         result = evaluate_dl_model(model, X_test_pad, y_test, name)

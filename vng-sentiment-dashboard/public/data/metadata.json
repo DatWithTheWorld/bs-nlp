@@ -13,6 +13,16 @@
     "Neutral": 1466,
     "Positive": 14923
   },
+  "aspect_distribution": {
+    "Account & Security": 4914,
+    "Performance & Ads": 3894,
+    "General Satisfaction": 3024,
+    "UI/UX & Input": 2898,
+    "App Updates": 2843,
+    "Monetization & Content": 2592,
+    "Graphics & Quality": 2582,
+    "Connectivity & Stability": 2378
+  },
   "apps": [
     "Zalo",
     "Zing MP3",

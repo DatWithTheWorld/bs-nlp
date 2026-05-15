@@ -11,7 +11,7 @@ async function loadJSON(path) {
 }
 
 async function loadAllData() {
-  const [mlResults, dlResults, cvResults, dlCvResults, dlHistories, metadata, features, reviewStats] = await Promise.all([
+  const [mlResults, dlResults, cvResults, dlCvResults, dlHistories, metadata, features, reviewStats, aspectStats, insightsData] = await Promise.all([
     loadJSON('/data/ml_results.json'),
     loadJSON('/data/dl_results.json'),
     loadJSON('/data/cv_results.json'),
@@ -20,8 +20,10 @@ async function loadAllData() {
     loadJSON('/data/metadata.json'),
     loadJSON('/data/feature_importance.json'),
     loadJSON('/data/review_stats.json'),
+    loadJSON('/data/aspect_stats.json'),
+    loadJSON('/data/insights.json'),
   ])
-  return { mlResults, dlResults, cvResults, dlCvResults, dlHistories, metadata, features, reviewStats }
+  return { mlResults, dlResults, cvResults, dlCvResults, dlHistories, metadata, features, reviewStats, aspectStats, insightsData }
 }
 
 // ==========================================
@@ -35,8 +37,16 @@ const COLORS = {
   blue: '#3b82f6', purple: '#8b5cf6', cyan: '#06b6d4',
   green: '#10b981', red: '#ef4444', orange: '#f59e0b',
   pink: '#ec4899', indigo: '#6366f1',
+  slate: '#94a3b8',
 }
-const MODEL_COLORS = [COLORS.blue, COLORS.purple, COLORS.green, COLORS.orange, COLORS.red, COLORS.cyan]
+const MODEL_COLORS = [
+  '#6366f1', // Indigo
+  '#8b5cf6', // Purple
+  '#ec4899', // Pink
+  '#06b6d4', // Cyan
+  '#10b981', // Green
+  '#f59e0b', // Orange
+]
 
 // ==========================================
 // APP STRUCTURE
@@ -84,6 +94,12 @@ function buildApp() {
             <div class="nav-item" data-page="cv">
               <span class="icon">🔄</span> Cross-Validation
             </div>
+            <div class="nav-item" data-page="aspects">
+              <span class="icon">🧩</span> Aspect Analysis
+            </div>
+            <div class="nav-item" data-page="insights">
+              <span class="icon">💡</span> Business Insights
+            </div>
           </div>
         </nav>
         <div class="sidebar-footer">
@@ -99,6 +115,8 @@ function buildApp() {
         <div id="page-dl" class="page-section"></div>
         <div id="page-comparison" class="page-section"></div>
         <div id="page-cv" class="page-section"></div>
+        <div id="page-aspects" class="page-section"></div>
+        <div id="page-insights" class="page-section"></div>
       </main>
     </div>
 
@@ -181,7 +199,7 @@ function renderOverview(data) {
   el.innerHTML = `
     <div class="page-header">
       <h2>📊 Dashboard Overview</h2>
-      <p>Tổng quan kết quả phân tích cảm xúc VNG App Reviews</p>
+      <p>Overview of VNG App Reviews sentiment analysis results</p>
     </div>
 
     <div class="stats-grid">
@@ -206,9 +224,9 @@ function renderOverview(data) {
         <div class="stat-sub">${bestName}</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Charts</div>
-        <div class="stat-value">18</div>
-        <div class="stat-sub">Interactive</div>
+        <div class="stat-label">Aspects Found</div>
+        <div class="stat-value">${Object.keys(metadata.aspect_distribution || {}).length}</div>
+        <div class="stat-sub">Categories</div>
       </div>
     </div>
 
@@ -230,6 +248,44 @@ function renderOverview(data) {
         </div>
         <div class="card-body chart-body">
           <canvas id="chart-models-acc" height="260"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: Aspect Analysis on Overview -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <span class="card-title">Aspect Distribution</span>
+        <span class="tag tag-data">DATA</span>
+      </div>
+      <div class="card-body" style="padding: 24px;">
+        <div class="aspect-overview-container">
+          <div class="aspect-chart-wrapper">
+             <canvas id="chart-aspect-doughnut-overview"></canvas>
+             <div class="chart-center-text">
+                <span class="center-value">${Object.values(metadata.aspect_distribution || {}).reduce((a, b) => a + b, 0).toLocaleString()}</span>
+                <span class="center-label">Total</span>
+             </div>
+          </div>
+          <div class="aspect-stats-list">
+             ${Object.entries(metadata.aspect_distribution || {}).map(([k, v], i) => {
+               const total = Object.values(metadata.aspect_distribution).reduce((a, b) => a + b, 0);
+               const pct = (v / total * 100).toFixed(1);
+               return `
+                 <div class="aspect-stat-item">
+                   <div class="aspect-stat-info">
+                     <span class="dot" style="background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></span>
+                     <span class="label">${k}</span>
+                     <span class="value">${v.toLocaleString()}</span>
+                     <span class="pct">${pct}%</span>
+                   </div>
+                   <div class="aspect-stat-bar">
+                     <div class="bar-fill" style="width: ${pct}%; background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></div>
+                   </div>
+                 </div>
+               `;
+             }).join('')}
+          </div>
         </div>
       </div>
     </div>
@@ -312,6 +368,31 @@ function renderOverview(data) {
     }
   })
 
+  // Aspect Doughnut Overview
+  const aspectDist = metadata.aspect_distribution || {}
+  const aspectLabels = Object.keys(aspectDist)
+  if (aspectLabels.length > 0) {
+    new Chart(document.getElementById('chart-aspect-doughnut-overview'), {
+      type: 'doughnut',
+      data: {
+        labels: aspectLabels,
+        datasets: [{
+          data: Object.values(aspectDist),
+          backgroundColor: MODEL_COLORS,
+          borderWidth: 0,
+          hoverOffset: 10,
+        }]
+      },
+      options: {
+        cutout: '75%',
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    })
+  }
+
   // Table
   const tbody = document.getElementById('table-all-models')
   const allEntries = [
@@ -361,7 +442,7 @@ function renderDataPage(data) {
   el.innerHTML = `
     <div class="page-header">
       <h2>📊 Data Analysis</h2>
-      <p>Phân bố dữ liệu & phân tích từ khóa</p>
+      <p>Data distribution & keyword analysis</p>
     </div>
 
     <div class="grid-2">
@@ -378,6 +459,44 @@ function renderDataPage(data) {
     <div class="card" style="margin-bottom: 20px;">
       <div class="card-header"><span class="card-title">Sentiment per App (Stacked)</span><span class="tag tag-data">DATA</span></div>
       <div class="card-body chart-body"><canvas id="chart-app-sentiment" height="300"></canvas></div>
+    </div>
+
+    <!-- Aspect Distribution -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <span class="card-title">Aspect Analysis</span>
+        <span class="tag tag-data">DATA</span>
+      </div>
+      <div class="card-body" style="padding: 24px;">
+        <div class="aspect-overview-container">
+          <div class="aspect-chart-wrapper">
+             <canvas id="chart-aspect-doughnut-data"></canvas>
+             <div class="chart-center-text">
+                <span class="center-value">${Object.values(data.metadata.aspect_distribution || {}).reduce((a, b) => a + b, 0).toLocaleString()}</span>
+                <span class="center-label">Total</span>
+             </div>
+          </div>
+          <div class="aspect-stats-list">
+             ${Object.entries(data.metadata.aspect_distribution || {}).map(([k, v], i) => {
+               const total = Object.values(data.metadata.aspect_distribution).reduce((a, b) => a + b, 0);
+               const pct = (v / total * 100).toFixed(1);
+               return `
+                 <div class="aspect-stat-item">
+                   <div class="aspect-stat-info">
+                     <span class="dot" style="background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></span>
+                     <span class="label">${k}</span>
+                     <span class="value">${v.toLocaleString()}</span>
+                     <span class="pct">${pct}%</span>
+                   </div>
+                   <div class="aspect-stat-bar">
+                     <div class="bar-fill" style="width: ${pct}%; background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></div>
+                   </div>
+                 </div>
+               `;
+             }).join('')}
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="grid-2">
@@ -445,6 +564,31 @@ function renderDataPage(data) {
       plugins: { legend: { position: 'top', labels: { usePointStyle: true } } }
     }
   })
+
+  // Aspect Doughnut Data
+  const aspectDist = data.metadata.aspect_distribution || {}
+  const aspectLabels = Object.keys(aspectDist)
+  if (aspectLabels.length > 0) {
+    new Chart(document.getElementById('chart-aspect-doughnut-data'), {
+      type: 'doughnut',
+      data: {
+        labels: aspectLabels,
+        datasets: [{
+          data: Object.values(aspectDist),
+          backgroundColor: MODEL_COLORS,
+          borderWidth: 0,
+          hoverOffset: 10,
+        }]
+      },
+      options: {
+        cutout: '75%',
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    })
+  }
 }
 
 // ==========================================
@@ -790,6 +934,255 @@ function renderCVPage(data) {
 }
 
 // ==========================================
+// PAGE: Aspect Analysis (Detailed)
+// ==========================================
+function renderAspectPage(data) {
+  const { aspectStats } = data
+  const el = document.getElementById('page-aspects')
+  
+  if (!aspectStats) {
+    el.innerHTML = '<div class="card">No detailed aspect data available.</div>'
+    return
+  }
+
+  const { aspect_sentiment, aspect_keywords } = aspectStats
+  const aspects = Object.keys(aspect_sentiment)
+
+  el.innerHTML = `
+    <div class="page-header">
+      <h2>🧩 Aspect-Based Sentiment Analysis</h2>
+      <p>Deep dive into specific feedback categories and their sentiment trends</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Sentiment per Aspect (Percentage)</span>
+          <span class="tag tag-data">ANALYSIS</span>
+        </div>
+        <div class="card-body chart-body" style="min-height: 400px;">
+          <canvas id="chart-aspect-sentiment-stacked" height="350"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Aspect Distribution Detail</span>
+          <span class="tag tag-data">DATA</span>
+        </div>
+        <div class="card-body" style="padding: 24px;">
+           <div class="aspect-chart-wrapper" style="margin: 0 auto 24px; width: 200px; height: 200px;">
+             <canvas id="chart-aspect-doughnut-page"></canvas>
+             <div class="chart-center-text">
+                <span class="center-value" style="font-size: 20px;">${Object.values(aspect_sentiment).reduce((acc, s) => acc + s.Positive + s.Negative + s.Neutral, 0).toLocaleString()}</span>
+                <span class="center-label" style="font-size: 9px;">Total</span>
+             </div>
+          </div>
+          <div class="aspect-stats-list">
+             ${aspects.map((asp, i) => {
+               const s = aspect_sentiment[asp];
+               const total = s.Positive + s.Negative + s.Neutral;
+               const grandTotal = Object.values(aspect_sentiment).reduce((acc, curr) => acc + curr.Positive + curr.Negative + curr.Neutral, 0);
+               const pct = (total / grandTotal * 100).toFixed(1);
+               return `
+                 <div class="aspect-stat-item">
+                   <div class="aspect-stat-info">
+                     <span class="dot" style="background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></span>
+                     <span class="label">${asp}</span>
+                     <span class="value">${total.toLocaleString()}</span>
+                     <span class="pct">${pct}%</span>
+                   </div>
+                   <div class="aspect-stat-bar">
+                     <div class="bar-fill" style="width: ${pct}%; background: ${MODEL_COLORS[i % MODEL_COLORS.length]}"></div>
+                   </div>
+                 </div>
+               `;
+             }).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top: 32px;">
+      <div class="section-header">
+        <div class="section-icon data">🧩</div>
+        <div>
+          <div class="section-title">Top Keywords by Aspect</div>
+          <div class="section-sub">Contextual words identified in each category</div>
+        </div>
+      </div>
+      <div class="grid-3">
+        ${aspects.map((asp, i) => `
+          <div class="aspect-kw-group">
+            <div class="aspect-kw-label">
+              <span class="dot" style="background: ${MODEL_COLORS[i % MODEL_COLORS.length]}; width: 6px; height: 6px; border-radius: 50%;"></span>
+              ${asp}
+            </div>
+            <div class="feature-words" style="margin-top: 12px;">
+              ${aspect_keywords[asp].map(kw => `<span class="feature-word">${kw}</span>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+
+  // Aspect Doughnut Page
+  new Chart(document.getElementById('chart-aspect-doughnut-page'), {
+    type: 'doughnut',
+    data: {
+      labels: aspects,
+      datasets: [{
+        data: aspects.map(asp => aspect_sentiment[asp].Positive + aspect_sentiment[asp].Negative + aspect_sentiment[asp].Neutral),
+        backgroundColor: MODEL_COLORS,
+        borderWidth: 0,
+      }]
+    },
+    options: { cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  })
+
+  // Stacked Sentiment Bar
+  new Chart(document.getElementById('chart-aspect-sentiment-stacked'), {
+    type: 'bar',
+    data: {
+      labels: aspects,
+      datasets: [
+        {
+          label: 'Positive',
+          data: aspects.map(asp => {
+            const s = aspect_sentiment[asp]
+            const total = s.Positive + s.Negative + s.Neutral
+            return (s.Positive / total * 100)
+          }),
+          backgroundColor: COLORS.green,
+          borderRadius: 4
+        },
+        {
+          label: 'Negative',
+          data: aspects.map(asp => {
+            const s = aspect_sentiment[asp]
+            const total = s.Positive + s.Negative + s.Neutral
+            return (s.Negative / total * 100)
+          }),
+          backgroundColor: COLORS.red,
+          borderRadius: 4
+        },
+        {
+          label: 'Neutral',
+          data: aspects.map(asp => {
+            const s = aspect_sentiment[asp]
+            const total = s.Positive + s.Negative + s.Neutral
+            return (s.Neutral / total * 100)
+          }),
+          backgroundColor: COLORS.orange,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      maintainAspectRatio: false,
+      scales: {
+        x: { stacked: true, max: 100, ticks: { callback: v => v + '%' } },
+        y: { stacked: true }
+      },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, padding: 20 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + '%' } }
+      }
+    }
+  })
+}
+
+// ==========================================
+// PAGE: Business Insights
+// ==========================================
+function renderInsightsPage(data) {
+  const { insightsData } = data
+  const el = document.getElementById('page-insights')
+  
+  if (!insightsData) {
+    el.innerHTML = '<div class="card">No business insights available.</div>'
+    return
+  }
+
+  const { insights, recommendations, summary } = insightsData
+
+  el.innerHTML = `
+    <div class="page-header">
+      <h2>💡 Business Insights & Recommendations</h2>
+      <p>Data-driven strategic takeaways for product and engineering teams</p>
+    </div>
+
+    <div class="card insight-summary-card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <span class="card-title">Executive Summary</span>
+        <span class="tag tag-all">OVERVIEW</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size: 16px; line-height: 1.6; color: var(--text-1);">${summary}</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon compare">🔍</div>
+          <div class="section-title">Strategic Insights</div>
+        </div>
+        <div class="insights-list">
+          ${insights.map(ins => `
+            <div class="insight-card">
+              <div class="insight-header">
+                <span class="insight-category">${ins.category}</span>
+                <span class="tag tag-impact-${ins.impact.toLowerCase()}">${ins.impact} Impact</span>
+              </div>
+              <div class="insight-title">${ins.title}</div>
+              <div class="insight-desc">${ins.description}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon dl">🚀</div>
+          <div class="section-title">Actionable Recommendations</div>
+        </div>
+        <div class="recommendations-container">
+          ${recommendations.map(rec => `
+            <div class="rec-item">
+              <span class="rec-icon">✅</span>
+              <span class="rec-text">${rec}</span>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div class="card" style="margin-top: 24px;">
+           <div class="card-header"><span class="card-title">Sentiment Distribution (Reference)</span></div>
+           <div class="card-body chart-body">
+              <canvas id="chart-insights-mini" height="200"></canvas>
+           </div>
+        </div>
+      </div>
+    </div>
+  `
+
+  // Mini Chart for reference
+  new Chart(document.getElementById('chart-insights-mini'), {
+    type: 'pie',
+    data: {
+      labels: ['Positive', 'Negative', 'Neutral'],
+      datasets: [{
+        data: [data.reviewStats.sentiment_dist.Positive, data.reviewStats.sentiment_dist.Negative, data.reviewStats.sentiment_dist.Neutral],
+        backgroundColor: [COLORS.green, COLORS.red, COLORS.orange],
+        borderWidth: 0
+      }]
+    },
+    options: { plugins: { legend: { position: 'right' } } }
+  })
+}
+
+// ==========================================
 // INIT
 // ==========================================
 async function init() {
@@ -809,6 +1202,8 @@ async function init() {
   renderDLPage(data)
   renderComparisonPage(data)
   renderCVPage(data)
+  renderAspectPage(data)
+  renderInsightsPage(data)
 }
 
 init()

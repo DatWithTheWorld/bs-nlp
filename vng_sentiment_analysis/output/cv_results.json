@@ -39,7 +39,7 @@
     "std_test_accuracy": 0.004321036588097613,
     "mean_test_f1": 0.7683367031171178,
     "std_test_f1": 0.004240939634000397,
-    "time_seconds": 7.621110916137695
+    "time_seconds": 4.44562029838562
   },
   "Logistic Regression": {
     "test_accuracy": [
@@ -81,7 +81,7 @@
     "std_test_accuracy": 0.003410893266415396,
     "mean_test_f1": 0.7821880556361721,
     "std_test_f1": 0.0034843298394448925,
-    "time_seconds": 5.842132806777954
+    "time_seconds": 11.206350088119507
   },
   "SVM (Linear)": {
     "test_accuracy": [
@@ -123,7 +123,7 @@
     "std_test_accuracy": 0.0034516262348320338,
     "mean_test_f1": 0.8089323000032633,
     "std_test_f1": 0.003659008049494851,
-    "time_seconds": 6.3333165645599365
+    "time_seconds": 15.63716435432434
   },
   "Random Forest": {
     "test_accuracy": [
@@ -165,6 +165,6 @@
     "std_test_accuracy": 0.0028790622929615204,
     "mean_test_f1": 0.8619845812987224,
     "std_test_f1": 0.0029434499176990213,
-    "time_seconds": 67.16263508796692
+    "time_seconds": 71.15296149253845
   }
 }
